@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CliniSync - Portal do Cliente</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Firebase SDKs -->
+    <script defer src="/__/firebase/10.11.1/firebase-app-compat.js"></script>
+    <script defer src="/__/firebase/10.11.1/firebase-firestore-compat.js"></script>
+    <script defer src="/__/firebase/init.js"></script>
+    <script defer src="app.js"></script>
+    <style>
+        .client-container { max-width: 800px; margin: 0 auto; padding: 20px; width: 100%; }
+        .login-view { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; width: 100%; }
+        .portal-view { display: none; }
+        .points-card { background: linear-gradient(135deg, var(--primary-color), var(--primary-hover)); color: white; padding: 30px; border-radius: 16px; text-align: center; margin-bottom: 24px; box-shadow: 0 10px 20px rgba(14, 165, 233, 0.2); }
+        .points-card h2 { font-size: 48px; margin: 10px 0; }
+        .rewards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .reward-card { background: white; border: 1px solid var(--border-color); padding: 20px; border-radius: 12px; text-align: center; }
+        .reward-card h3 { color: var(--primary-color); font-size: 24px; margin-bottom: 10px; }
+        .history-list { list-style: none; padding: 0; }
+        .history-item { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid var(--border-color); }
+        .history-item:last-child { border-bottom: none; }
+        .pts-positive { color: #10B981; font-weight: bold; }
+        .pts-negative { color: #EF4444; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <!-- Mock Login -->
+    <div id="login-section" class="login-view">
+        <i class="ph-duotone ph-tooth" style="font-size: 64px; color: var(--primary-color); margin-bottom: 20px;"></i>
+        <h1>Bem-vindo ao CliniSync</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 30px;">Selecione seu perfil para acessar o portal do cliente.</p>
+        
+        <div class="input-group" style="width: 300px; text-align: left;">
+            <select id="client-select" style="width: 100%; padding: 12px; border-radius: 8px;">
+                <option value="">Carregando clientes...</option>
+            </select>
+        </div>
+        <button id="btn-login" class="btn-primary" style="margin-top: 20px; width: 300px; justify-content: center;">Entrar no Portal</button>
+    </div>
+
+    <!-- Client Portal -->
+    <div id="portal-section" class="client-container portal-view">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="ph-fill ph-tooth" style="color: var(--primary-color); font-size: 24px;"></i>
+                <h2 style="font-size: 20px; font-weight: 600;">CliniSync</h2>
+            </div>
+            <button id="btn-logout" class="btn-secondary" style="padding: 8px 16px;">Sair</button>
+        </header>
+
+        <h1 style="margin-bottom: 20px;">Olá, <span id="user-name">Cliente</span>!</h1>
+
+        <div class="points-card">
+            <p style="font-size: 18px; opacity: 0.9;">Seu Saldo Atual</p>
+            <h2 id="user-points">0 <span style="font-size: 20px; font-weight: normal;">Pontos</span></h2>
+            <p style="font-size: 14px; opacity: 0.8;">Ganhe pontos comparecendo às consultas e troque por descontos!</p>
+        </div>
+
+        <h3 style="margin-bottom: 15px;">Vitrine de Recompensas</h3>
+        <div class="rewards-grid" id="rewards-container">
+            <!-- Cupons dinâmicos serão injetados aqui -->
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 30px;">
+            <div class="card">
+                <h3 style="margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Meus Cupons</h3>
+                <ul class="history-list" id="cupons-list">
+                    <!-- Cupons here -->
+                </ul>
+                <p id="cupons-empty" style="color: var(--text-secondary); font-size: 14px; display: none;">Nenhum cupom resgatado.</p>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Extrato de Pontos</h3>
+                <ul class="history-list" id="extrato-list">
+                    <!-- Extrato here -->
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card" style="margin-top: 24px;">
+            <h3 style="margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Minhas Próximas Consultas</h3>
+            <ul class="history-list" id="agenda-list">
+                <!-- Agenda here -->
+            </ul>
+            <p id="agenda-empty" style="color: var(--text-secondary); font-size: 14px; display: none;">Nenhuma consulta agendada.</p>
+        </div>
+
+    </div>
+</body>
+</html>
