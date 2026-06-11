@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CliniSync - Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Firebase SDKs -->
+    <script defer src="/__/firebase/10.11.1/firebase-app-compat.js"></script>
+    <script defer src="/__/firebase/10.11.1/firebase-firestore-compat.js"></script>
+    <script defer src="/__/firebase/init.js"></script>
+    <script defer src="admin.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo-container">
+            <h1 class="logo"><i class="ph-fill ph-tooth"></i> CliniSync</h1>
+            <p class="subtitle">Gestão & Gamificação</p>
+        </div>
+        <nav>
+            <button class="nav-btn active" data-view="dashboard"><i class="ph ph-squares-four"></i> Dashboard</button>
+            <button class="nav-btn" data-view="agenda"><i class="ph ph-calendar-blank"></i> Agenda</button>
+            <button class="nav-btn" data-view="clientes"><i class="ph ph-users"></i> Clientes</button>
+            <button class="nav-btn" data-view="servicos"><i class="ph ph-list-dashes"></i> Serviços</button>
+            <button class="nav-btn" data-view="config"><i class="ph ph-gear"></i> Configurações</button>
+        </nav>
+    </div>
+
+    <main class="content">
+        <!-- Dashboard -->
+        <section id="view-dashboard" class="view-section active">
+            <header class="section-header">
+                <h2>Dashboard & Ranking</h2>
+            </header>
+            <div class="card">
+                <h3 style="margin-bottom: 20px;">Ranking de Assiduidade (Pontos)</h3>
+                <table class="clients-table">
+                    <thead>
+                        <tr>
+                            <th>Posição</th>
+                            <th>Cliente</th>
+                            <th>Pontos Atuais</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ranking-tbody">
+                        <!-- JS injects here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Agenda -->
+        <section id="view-agenda" class="view-section">
+            <header class="section-header">
+                <h2>Agenda do Consultório</h2>
+                <button class="btn-primary" id="btn-add-agenda"><i class="ph ph-plus"></i> Novo Agendamento</button>
+            </header>
+            
+            <div id="modal-agenda" class="card hidden" style="margin-bottom: 24px; border: 1px solid var(--primary-color);">
+                <h3 style="margin-bottom: 20px;">Adicionar Agendamento</h3>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Cliente</label>
+                        <select id="agenda-cliente"></select>
+                    </div>
+                    <div class="input-group">
+                        <label>Serviço</label>
+                        <select id="agenda-servico"></select>
+                    </div>
+                    <div class="input-group">
+                        <label>Data/Hora</label>
+                        <input type="datetime-local" id="agenda-datahora">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-secondary" id="btn-cancel-agenda">Cancelar</button>
+                    <button class="btn-primary" id="btn-save-agenda">Salvar</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <table class="clients-table">
+                    <thead>
+                        <tr>
+                            <th>Data e Hora</th>
+                            <th>Cliente</th>
+                            <th>Serviço</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="agenda-tbody">
+                        <!-- JS injects here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Clientes -->
+        <section id="view-clientes" class="view-section">
+            <header class="section-header">
+                <h2>Meus Clientes</h2>
+                <button class="btn-primary" id="btn-add-cliente"><i class="ph ph-plus"></i> Novo Cliente</button>
+            </header>
+
+            <div id="modal-cliente" class="card hidden" style="margin-bottom: 24px; border: 1px solid var(--primary-color);">
+                <h3 style="margin-bottom: 20px;">Cadastrar Cliente</h3>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Nome Completo</label>
+                        <input type="text" id="cliente-nome">
+                    </div>
+                    <div class="input-group">
+                        <label>Telefone (WhatsApp)</label>
+                        <input type="text" id="cliente-telefone" placeholder="5511999999999">
+                    </div>
+                    <div class="input-group">
+                        <label>E-mail</label>
+                        <input type="email" id="cliente-email" placeholder="cliente@email.com">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-secondary" id="btn-cancel-cliente">Cancelar</button>
+                    <button class="btn-primary" id="btn-save-cliente">Salvar</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <table class="clients-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>E-mail</th>
+                            <th>Pontos</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientes-tbody">
+                        <!-- JS injects here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Serviços -->
+        <section id="view-servicos" class="view-section">
+            <header class="section-header">
+                <h2>Serviços Oferecidos</h2>
+                <button class="btn-primary" id="btn-add-servico"><i class="ph ph-plus"></i> Novo Serviço</button>
+            </header>
+
+            <div id="modal-servico" class="card hidden" style="margin-bottom: 24px; border: 1px solid var(--primary-color);">
+                <h3 style="margin-bottom: 20px;">Cadastrar/Editar Serviço</h3>
+                <input type="hidden" id="servico-id">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Nome do Serviço</label>
+                        <input type="text" id="servico-nome">
+                    </div>
+                    <div class="input-group">
+                        <label>Valor (R$)</label>
+                        <input type="number" step="0.01" id="servico-valor">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-secondary" id="btn-cancel-servico">Cancelar</button>
+                    <button class="btn-primary" id="btn-save-servico">Salvar</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <table class="clients-table">
+                    <thead>
+                        <tr>
+                            <th>Serviço</th>
+                            <th>Valor (R$)</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="servicos-tbody">
+                        <!-- JS injects here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Configurações -->
+        <section id="view-config" class="view-section">
+            <header class="section-header">
+                <h2>Configurações de Recompensas</h2>
+                <button class="btn-primary" id="btn-save-config"><i class="ph ph-floppy-disk"></i> Salvar</button>
+            </header>
+            <div class="card">
+                <h3 style="margin-bottom: 20px;">Cupom 1</h3>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Percentual de Desconto (%)</label>
+                        <input type="number" id="config-cupom1-perc" value="10">
+                    </div>
+                    <div class="input-group">
+                        <label>Custo em Pontos</label>
+                        <input type="number" id="config-cupom1-pts" value="50">
+                    </div>
+                </div>
+                
+                <h3 style="margin-bottom: 20px; margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px;">Cupom 2</h3>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Percentual de Desconto (%)</label>
+                        <input type="number" id="config-cupom2-perc" value="20">
+                    </div>
+                    <div class="input-group">
+                        <label>Custo em Pontos</label>
+                        <input type="number" id="config-cupom2-pts" value="100">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</body>
+</html>
