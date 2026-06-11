@@ -163,26 +163,34 @@ async function carregarConfiguracoes() {
         const doc = await db.collection("configuracoes").doc("recompensas").get();
         if (doc.exists) {
             configCache = doc.data();
+            localStorage.setItem('cliniSync_config_cache', JSON.stringify(configCache));
         }
-        
-        const container = document.getElementById('rewards-container');
-        container.innerHTML = `
-            <div class="reward-card">
-                <i class="ph-duotone ph-ticket" style="font-size: 40px; color: var(--primary-color);"></i>
-                <h3>${configCache.cupom1.percentual}% OFF</h3>
-                <p style="color: var(--text-secondary); margin-bottom: 15px;">Em qualquer procedimento</p>
-                <button class="btn-primary w-100" onclick="resgatarCupom(${configCache.cupom1.percentual}, ${configCache.cupom1.pontos})" style="width: 100%; justify-content: center;">Resgatar por ${configCache.cupom1.pontos} pts</button>
-            </div>
-            <div class="reward-card">
-                <i class="ph-duotone ph-ticket" style="font-size: 40px; color: var(--primary-color);"></i>
-                <h3>${configCache.cupom2.percentual}% OFF</h3>
-                <p style="color: var(--text-secondary); margin-bottom: 15px;">Em qualquer procedimento</p>
-                <button class="btn-primary w-100" onclick="resgatarCupom(${configCache.cupom2.percentual}, ${configCache.cupom2.pontos})" style="width: 100%; justify-content: center;">Resgatar por ${configCache.cupom2.pontos} pts</button>
-            </div>
-        `;
     } catch(e) {
-        console.error("Erro ao carregar recompensas", e);
+        console.error("Erro ao carregar do Firebase. Tentando LocalStorage...", e);
+        
+        // Se a busca no Firebase falhar, recupera o que estava salvo no navegador
+        const cacheSalvo = localStorage.getItem('cliniSync_config_cache');
+        if (cacheSalvo) {
+            configCache = JSON.parse(cacheSalvo);
+            console.log("Configurações carregadas do LocalStorage com sucesso!");
+        }
     }
+        
+    const container = document.getElementById('rewards-container');
+    container.innerHTML = `
+        <div class="reward-card">
+            <i class="ph-duotone ph-ticket" style="font-size: 40px; color: var(--primary-color);"></i>
+            <h3>${configCache.cupom1.percentual}% OFF</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">Em qualquer procedimento</p>
+            <button class="btn-primary w-100" onclick="resgatarCupom(${configCache.cupom1.percentual}, ${configCache.cupom1.pontos})" style="width: 100%; justify-content: center;">Resgatar por ${configCache.cupom1.pontos} pts</button>
+        </div>
+        <div class="reward-card">
+            <i class="ph-duotone ph-ticket" style="font-size: 40px; color: var(--primary-color);"></i>
+            <h3>${configCache.cupom2.percentual}% OFF</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">Em qualquer procedimento</p>
+            <button class="btn-primary w-100" onclick="resgatarCupom(${configCache.cupom2.percentual}, ${configCache.cupom2.pontos})" style="width: 100%; justify-content: center;">Resgatar por ${configCache.cupom2.pontos} pts</button>
+        </div>
+    `;
 }
 
 async function resgatarCupom(desconto, custo) {
