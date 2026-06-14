@@ -14,7 +14,12 @@
     <script defer src="admin.js"></script>
 </head>
 <body>
-    <div class="sidebar">
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Abrir menu">
+        <i class="ph ph-list"></i>
+    </button>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="sidebar" id="sidebar">
         <div class="logo-container">
             <h1 class="logo"><i class="ph-fill ph-tooth"></i> CliniSync</h1>
             <p class="subtitle">Gestão & Gamificação</p>
@@ -24,8 +29,13 @@
             <button class="nav-btn" data-view="agenda"><i class="ph ph-calendar-blank"></i> Agenda</button>
             <button class="nav-btn" data-view="clientes"><i class="ph ph-users"></i> Clientes</button>
             <button class="nav-btn" data-view="servicos"><i class="ph ph-list-dashes"></i> Serviços</button>
-            <button class="nav-btn" data-view="config"><i class="ph ph-gear"></i> Configurações</button>
+            <button class="nav-btn" data-view="recompensas"><i class="ph ph-gift"></i> Recompensas</button>
         </nav>
+        <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border-color);">
+            <a href="index.html" class="nav-btn" style="text-decoration: none; color: var(--text-secondary);">
+                <i class="ph ph-sign-out"></i> Portal do Cliente
+            </a>
+        </div>
     </div>
 
     <main class="content">
@@ -110,6 +120,7 @@
                 <h3 style="margin-bottom: 20px;">Cadastrar Cliente</h3>
                 <div class="form-grid">
                     <div class="input-group">
+                        <input type="hidden" id="cliente-id">
                         <label>Nome Completo</label>
                         <input type="text" id="cliente-nome">
                     </div>
@@ -120,6 +131,10 @@
                     <div class="input-group">
                         <label>E-mail</label>
                         <input type="email" id="cliente-email" placeholder="cliente@email.com">
+                    </div>
+                    <div class="input-group">
+                        <label>Data de Aniversário</label>
+                        <input type="date" id="cliente-aniversario">
                     </div>
                 </div>
                 <div class="form-actions">
@@ -188,37 +203,51 @@
             </div>
         </section>
 
-        <!-- Configurações -->
-        <section id="view-config" class="view-section">
+        <!-- Recompensas -->
+        <section id="view-recompensas" class="view-section">
             <header class="section-header">
-                <h2>Configurações de Recompensas</h2>
-                <button class="btn-primary" id="btn-save-config"><i class="ph ph-floppy-disk"></i> Salvar</button>
+                <h2>Recompensas & Benefícios</h2>
+                <button class="btn-primary" id="btn-add-recompensa"><i class="ph ph-plus"></i> Nova Recompensa</button>
             </header>
-            <div class="card">
-                <h3 style="margin-bottom: 20px;">Cupom 1</h3>
+
+            <div id="modal-recompensa" class="card hidden" style="margin-bottom: 24px; border: 1px solid var(--primary-color);">
+                <h3 style="margin-bottom: 20px;">Cadastrar/Editar Recompensa</h3>
+                <input type="hidden" id="recompensa-id">
                 <div class="form-grid">
                     <div class="input-group">
-                        <label>Percentual de Desconto (%)</label>
-                        <input type="number" id="config-cupom1-perc" value="10">
+                        <label>Nome da Recompensa</label>
+                        <input type="text" id="recompensa-nome" placeholder="Ex: Desconto na Limpeza">
+                    </div>
+                    <div class="input-group">
+                        <label>Tipo</label>
+                        <select id="recompensa-tipo">
+                            <option value="desconto">Desconto (%)</option>
+                            <option value="bonus">Bônus Fixo (R$)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Valor (% ou R$)</label>
+                        <input type="number" step="0.01" id="recompensa-valor" placeholder="10">
                     </div>
                     <div class="input-group">
                         <label>Custo em Pontos</label>
-                        <input type="number" id="config-cupom1-pts" value="50">
+                        <input type="number" id="recompensa-custo" placeholder="50">
+                    </div>
+                    <div class="input-group full-width">
+                        <label>Descrição</label>
+                        <input type="text" id="recompensa-desc" placeholder="Ex: Em qualquer procedimento">
                     </div>
                 </div>
-                
-                <h3 style="margin-bottom: 20px; margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px;">Cupom 2</h3>
-                <div class="form-grid">
-                    <div class="input-group">
-                        <label>Percentual de Desconto (%)</label>
-                        <input type="number" id="config-cupom2-perc" value="20">
-                    </div>
-                    <div class="input-group">
-                        <label>Custo em Pontos</label>
-                        <input type="number" id="config-cupom2-pts" value="100">
-                    </div>
+                <div class="form-actions">
+                    <button class="btn-secondary" id="btn-cancel-recompensa">Cancelar</button>
+                    <button class="btn-primary" id="btn-save-recompensa">Salvar</button>
                 </div>
             </div>
+
+            <div class="recompensas-grid" id="recompensas-container">
+                <!-- JS injects here -->
+            </div>
+            <p id="recompensas-empty" class="hidden" style="color: var(--text-secondary); text-align: center; padding: 40px; font-size: 15px;">Nenhuma recompensa cadastrada. Clique em "Nova Recompensa" para começar.</p>
         </section>
 
     </main>

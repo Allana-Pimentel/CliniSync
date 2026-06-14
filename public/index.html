@@ -42,10 +42,38 @@
             </select>
         </div>
         <button id="btn-login" class="btn-primary" style="margin-top: 20px; width: 300px; justify-content: center;">Entrar no Portal</button>
+        
+        <button id="btn-admin-access" style="margin-top: 16px; background: none; border: none; color: var(--text-secondary); font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: color 0.3s;">
+            <i class="ph ph-gear-six"></i> Acesso Administrativo
+        </button>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(6px); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 90%; max-width: 380px; animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <i class="ph-duotone ph-shield-check" style="font-size: 48px; color: var(--primary-color);"></i>
+                <h3 style="font-size: 22px; margin-top: 12px; font-weight: 600;">Acesso Admin</h3>
+                <p style="color: var(--text-secondary); font-size: 14px; margin-top: 4px;">Insira as credenciais de administrador</p>
+            </div>
+            <div class="input-group" style="margin-bottom: 16px;">
+                <label>Usuário</label>
+                <input type="text" id="admin-user" placeholder="Usuário" autocomplete="off">
+            </div>
+            <div class="input-group" style="margin-bottom: 24px;">
+                <label>Senha</label>
+                <input type="password" id="admin-pass" placeholder="Senha" autocomplete="off">
+            </div>
+            <p id="admin-login-error" style="display: none; color: #EF4444; font-size: 13px; margin-bottom: 12px; text-align: center; font-weight: 500;">Usuário ou senha incorretos.</p>
+            <div style="display: flex; gap: 12px;">
+                <button id="btn-cancel-admin" class="btn-secondary" style="flex: 1; justify-content: center;">Cancelar</button>
+                <button id="btn-confirm-admin" class="btn-primary" style="flex: 1; justify-content: center;">Entrar</button>
+            </div>
+        </div>
     </div>
 
     <!-- Client Portal -->
-    <div id="portal-section" class="client-container portal-view">
+    <div id="portal-section" class="client-container portal-view" style="display: none;">
         <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
             <div style="display: flex; align-items: center; gap: 10px;">
                 <i class="ph-fill ph-tooth" style="color: var(--primary-color); font-size: 24px;"></i>
@@ -54,7 +82,7 @@
             <button id="btn-logout" class="btn-secondary" style="padding: 8px 16px;">Sair</button>
         </header>
 
-        <h1 style="margin-bottom: 20px;">Olá, <span id="user-name">Cliente</span>!</h1>
+        <h1 style="margin-bottom: 20px; font-size: 28px; font-weight: 300;"><span id="user-name" style="font-weight: 600;">Cliente</span></h1>
 
         <div class="points-card">
             <p style="font-size: 18px; opacity: 0.9;">Seu Saldo Atual</p>

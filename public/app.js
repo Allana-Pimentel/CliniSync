@@ -25,6 +25,41 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('portal-section').style.display = 'none';
         currentUser = null;
     });
+
+    // Admin Access Logic
+    const adminBtn = document.getElementById('btn-admin-access');
+    const adminOverlay = document.getElementById('admin-login-overlay');
+    const adminCancel = document.getElementById('btn-cancel-admin');
+    const adminConfirm = document.getElementById('btn-confirm-admin');
+    const adminError = document.getElementById('admin-login-error');
+
+    if(adminBtn) {
+        adminBtn.addEventListener('click', () => {
+            adminOverlay.style.display = 'flex';
+            document.getElementById('admin-user').value = '';
+            document.getElementById('admin-pass').value = '';
+            adminError.style.display = 'none';
+        });
+    }
+
+    if(adminCancel) {
+        adminCancel.addEventListener('click', () => {
+            adminOverlay.style.display = 'none';
+        });
+    }
+
+    if(adminConfirm) {
+        adminConfirm.addEventListener('click', () => {
+            const user = document.getElementById('admin-user').value;
+            const pass = document.getElementById('admin-pass').value;
+            
+            if (user === 'admin' && pass === 'admin') {
+                window.location.href = 'admin.html';
+            } else {
+                adminError.style.display = 'block';
+            }
+        });
+    }
 });
 
 async function carregarClientesLogin() {
@@ -153,65 +188,117 @@ async function atualizarPainelCliente() {
     }
 }
 
-let configCache = {
-    cupom1: { percentual: 10, pontos: 50 },
-    cupom2: { percentual: 20, pontos: 100 }
-};
+let recompensasCache = [];
 
 async function carregarConfiguracoes() {
     try {
-        const doc = await db.collection("configuracoes").doc("recompensas").get();
-        if (doc.exists) {
-            configCache = doc.data();
-            localStorage.setItem('cliniSync_config_cache', JSON.stringify(configCache));
-        }
-    } catch(e) {
-        console.error("Erro ao carregar do Firebase. Tentando LocalStorage...", e);
+        const snapshot = await db.collection("recompensas").get();
+        recompensasCache = [];
+        snapshot.forEach(doc => recompensasCache.push({ id: doc.id, ...doc.data() }));
         
-        // Se a busca no Firebase falhar, recupera o que estava salvo no navegador
-        const cacheSalvo = localStorage.getItem('cliniSync_config_cache');
+        // Fallback: if no rewards in new collection, try old config format
+        if (recompensasCache.length === 0) {
+            const configDoc = await db.collection("configuracoes").doc("recompensas").get();
+            if (configDoc.exists) {
+                const data = configDoc.data();
+                if (data.cupom1) {
+                    recompensasCache.push({
+                        nome: `Cupom ${data.cupom1.percentual}% OFF`,
+                        descricao: "Em qualquer procedimento",
+                        tipo: "desconto",
+                        valor: data.cupom1.percentual,
+                        custoPontos: data.cupom1.pontos
+                    });
+                }
+                if (data.cupom2) {
+                    recompensasCache.push({
+                        nome: `Cupom ${data.cupom2.percentual}% OFF`,
+                        descricao: "Em qualquer procedimento",
+                        tipo: "desconto",
+                        valor: data.cupom2.percentual,
+                        custoPontos: data.cupom2.pontos
+                    });
+                }
+            }
+        }
+
+        localStorage.setItem('cliniSync_recompensas_cache', JSON.stringify(recompensasCache));
+    } catch(e) {
+        console.error("Erro ao carregar recompensas. Tentando LocalStorage...", e);
+        const cacheSalvo = localStorage.getItem('cliniSync_recompensas_cache');
         if (cacheSalvo) {
-            configCache = JSON.parse(cacheSalvo);
-            console.log("Configurações carregadas do LocalStorage com sucesso!");
+            recompensasCache = JSON.parse(cacheSalvo);
         }
     }
         
     const container = document.getElementById('rewards-container');
-    container.innerHTML = `
-        <div class="reward-card">
-            <i class="ph-duotone ph-ticket" style="font-size: 40px; color: var(--primary-color);"></i>
-            <h3>${configCache.cupom1.percentual}% OFF</h3>
-            <p style="color: var(--text-secondary); margin-bottom: 15px;">Em qualquer procedimento</p>
-            <button class="btn-primary w-100" onclick="resgatarCupom(${configCache.cupom1.percentual}, ${configCache.cupom1.pontos})" style="width: 100%; justify-content: center;">Resgatar por ${configCache.cupom1.pontos} pts</button>
-        </div>
-        <div class="reward-card">
-            <i class="ph-duotone ph-ticket" style="font-size: 40px; color: var(--primary-color);"></i>
-            <h3>${configCache.cupom2.percentual}% OFF</h3>
-            <p style="color: var(--text-secondary); margin-bottom: 15px;">Em qualquer procedimento</p>
-            <button class="btn-primary w-100" onclick="resgatarCupom(${configCache.cupom2.percentual}, ${configCache.cupom2.pontos})" style="width: 100%; justify-content: center;">Resgatar por ${configCache.cupom2.pontos} pts</button>
-        </div>
-    `;
-}
+    container.innerHTML = '';
 
-async function resgatarCupom(desconto, custo) {
-    if (!currentUser) return;
-    
-    if (currentUser.pontos < custo) {
-        alert(`Você precisa de ${custo} pontos para resgatar este cupom.`);
+    if (recompensasCache.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1 / -1; text-align: center;">Nenhuma recompensa disponível no momento.</p>';
         return;
     }
 
-    if (confirm(`Deseja trocar ${custo} pontos por um cupom de ${desconto}% OFF?`)) {
+    // Lógica de Aniversário
+    if (currentUser && currentUser.aniversario) {
+        const [year, month, day] = currentUser.aniversario.split('-');
+        const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, '0');
+        if (month === currentMonth) {
+            container.innerHTML += `
+                <div class="reward-card" style="border: 2px solid var(--primary-color); background: rgba(14, 165, 233, 0.05); position: relative;">
+                    <div style="position: absolute; top: -12px; right: 20px; background: var(--primary-color); color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);">Mês do seu Aniversário! 🎉</div>
+                    <i class="ph-duotone ph-cake" style="font-size: 40px; color: var(--primary-color);"></i>
+                    <h3>Presente Especial</h3>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 15px;">20% OFF em qualquer procedimento!</p>
+                    <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="alert('Mostre esta tela na recepção para resgatar seu presente de aniversário!')">Resgatar Presente</button>
+                </div>
+            `;
+        }
+    }
+
+    recompensasCache.forEach((r, index) => {
+        const isDesconto = r.tipo === 'desconto';
+        const valorLabel = isDesconto ? `${r.valor}% OFF` : `R$ ${Number(r.valor).toFixed(2)}`;
+        const iconName = isDesconto ? 'ph-ticket' : 'ph-gift';
+
+        container.innerHTML += `
+            <div class="reward-card">
+                <i class="ph-duotone ${iconName}" style="font-size: 40px; color: var(--primary-color);"></i>
+                <h3>${valorLabel}</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 5px; font-weight: 500; font-size: 14px;">${r.nome}</p>
+                <p style="color: var(--text-secondary); margin-bottom: 15px; font-size: 13px;">${r.descricao || ''}</p>
+                <button class="btn-primary w-100" onclick="resgatarCupom(${index})" style="width: 100%; justify-content: center;">Resgatar por ${r.custoPontos} pts</button>
+            </div>
+        `;
+    });
+}
+
+async function resgatarCupom(index) {
+    if (!currentUser) return;
+    
+    const r = recompensasCache[index];
+    if (!r) return;
+
+    const custo = r.custoPontos;
+    const isDesconto = r.tipo === 'desconto';
+    const valorLabel = isDesconto ? `${r.valor}% OFF` : `R$ ${Number(r.valor).toFixed(2)}`;
+    
+    if (currentUser.pontos < custo) {
+        alert(`Você precisa de ${custo} pontos para resgatar "${r.nome}".`);
+        return;
+    }
+
+    if (confirm(`Deseja trocar ${custo} pontos por "${r.nome}" (${valorLabel})?`)) {
         try {
             // Deduct points
             const newPoints = currentUser.pontos - custo;
             await db.collection("clientes").doc(currentUser.id).update({ pontos: newPoints });
 
-            // Transacao
+            // Transação
             await db.collection("transacoes").add({
                 clienteId: currentUser.id,
                 pontos: -custo,
-                descricao: `Resgate de Cupom ${desconto}%`,
+                descricao: `Resgate: ${r.nome} (${valorLabel})`,
                 dataTransacao: new Date().toISOString()
             });
 
@@ -220,16 +307,20 @@ async function resgatarCupom(desconto, custo) {
             await db.collection("cupons").add({
                 clienteId: currentUser.id,
                 codigo: `CS-${hash}`,
-                descontoPercentual: desconto,
+                descontoPercentual: isDesconto ? r.valor : 0,
+                bonusValor: !isDesconto ? r.valor : 0,
+                nomeRecompensa: r.nome,
+                tipo: r.tipo,
                 dataResgate: new Date().toISOString(),
                 utilizado: false
             });
 
-            alert('Cupom resgatado com sucesso!');
+            alert('Recompensa resgatada com sucesso!');
             atualizarPainelCliente();
         } catch (e) {
-            alert('Erro ao resgatar cupom na nuvem.');
+            alert('Erro ao resgatar recompensa na nuvem.');
             console.error(e);
         }
     }
 }
+
