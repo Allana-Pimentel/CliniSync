@@ -3,6 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CliniSync — Portal do Cliente. Acompanhe seus pontos de fidelidade, agende consultas e resgate recompensas exclusivas na sua clínica odontológica.">
+    <!-- Open Graph (WhatsApp / Redes Sociais) -->
+    <meta property="og:title" content="CliniSync — Portal do Cliente">
+    <meta property="og:description" content="Acompanhe seus pontos de fidelidade, agende consultas e resgate recompensas na sua clínica odontológica.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://clinicsync-af312.web.app/og-image.png">
+    <meta property="og:url" content="https://clinicsync-af312.web.app/">
     <title>CliniSync - Portal do Cliente</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -13,64 +20,41 @@
     <script defer src="/__/firebase/init.js"></script>
     <script defer src="app.js"></script>
     <style>
-        .client-container { max-width: 800px; margin: 0 auto; padding: 20px; width: 100%; }
-        .login-view { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; width: 100%; }
-        .portal-view { display: none; }
-        .points-card { background: linear-gradient(135deg, var(--primary-color), var(--primary-hover)); color: white; padding: 30px; border-radius: 16px; text-align: center; margin-bottom: 24px; box-shadow: 0 10px 20px rgba(14, 165, 233, 0.2); }
-        .points-card h2 { font-size: 48px; margin: 10px 0; }
-        .rewards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-        .reward-card { background: white; border: 1px solid var(--border-color); padding: 20px; border-radius: 12px; text-align: center; }
-        .reward-card h3 { color: var(--primary-color); font-size: 24px; margin-bottom: 10px; }
-        .history-list { list-style: none; padding: 0; }
-        .history-item { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid var(--border-color); }
-        .history-item:last-child { border-bottom: none; }
-        .pts-positive { color: #10B981; font-weight: bold; }
-        .pts-negative { color: #EF4444; font-weight: bold; }
     </style>
 </head>
 <body>
+
+    <!-- Dark Mode Toggle (Global) -->
+    <div class="theme-toggle-container" style="position: absolute; top: 20px; right: 20px; display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 14px; color: var(--text-secondary); font-weight: 500;">Modo Escuro</span>
+        <label class="toggle-switch">
+            <input type="checkbox" id="global-theme-toggle">
+            <span class="slider"></span>
+        </label>
+    </div>
 
     <!-- Mock Login -->
     <div id="login-section" class="login-view">
         <i class="ph-duotone ph-tooth" style="font-size: 64px; color: var(--primary-color); margin-bottom: 20px;"></i>
         <h1>Bem-vindo ao CliniSync</h1>
-        <p style="color: var(--text-secondary); margin-bottom: 30px;">Selecione seu perfil para acessar o portal do cliente.</p>
+        <p style="color: var(--text-secondary); margin-bottom: 30px;">Faça login para acessar o portal do cliente.</p>
         
         <div class="input-group" style="width: 300px; text-align: left;">
-            <select id="client-select" style="width: 100%; padding: 12px; border-radius: 8px;">
-                <option value="">Carregando clientes...</option>
-            </select>
+            <label for="client-login-input" style="font-size: 13px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">CPF ou Telefone</label>
+            <input type="text" id="client-login-input" placeholder="Digite seu CPF ou Telefone" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-primary);">
         </div>
-        <button id="btn-login" class="btn-primary" style="margin-top: 20px; width: 300px; justify-content: center;">Entrar no Portal</button>
+        <div class="input-group" style="width: 300px; text-align: left; margin-top: 15px;">
+            <label for="client-pass" style="font-size: 13px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Senha</label>
+            <input type="password" id="client-pass" placeholder="Senha (Padrão inicial: 1234)" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-primary);">
+        </div>
+        <button id="btn-login" class="btn-primary" style="margin-top: 20px; width: 300px; justify-content: center;" aria-label="Entrar no portal do cliente">Entrar no Portal</button>
         
-        <button id="btn-admin-access" style="margin-top: 16px; background: none; border: none; color: var(--text-secondary); font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: color 0.3s;">
+        <a href="login.html" id="btn-admin-access" style="margin-top: 16px; background: none; border: none; color: var(--text-secondary); font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: color 0.3s; text-decoration: none;">
             <i class="ph ph-gear-six"></i> Acesso Administrativo
-        </button>
+        </a>
     </div>
 
-    <!-- Admin Login Modal -->
-    <div id="admin-login-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(6px); z-index: 1000; justify-content: center; align-items: center;">
-        <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 90%; max-width: 380px; animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
-            <div style="text-align: center; margin-bottom: 24px;">
-                <i class="ph-duotone ph-shield-check" style="font-size: 48px; color: var(--primary-color);"></i>
-                <h3 style="font-size: 22px; margin-top: 12px; font-weight: 600;">Acesso Admin</h3>
-                <p style="color: var(--text-secondary); font-size: 14px; margin-top: 4px;">Insira as credenciais de administrador</p>
-            </div>
-            <div class="input-group" style="margin-bottom: 16px;">
-                <label>Usuário</label>
-                <input type="text" id="admin-user" placeholder="Usuário" autocomplete="off">
-            </div>
-            <div class="input-group" style="margin-bottom: 24px;">
-                <label>Senha</label>
-                <input type="password" id="admin-pass" placeholder="Senha" autocomplete="off">
-            </div>
-            <p id="admin-login-error" style="display: none; color: #EF4444; font-size: 13px; margin-bottom: 12px; text-align: center; font-weight: 500;">Usuário ou senha incorretos.</p>
-            <div style="display: flex; gap: 12px;">
-                <button id="btn-cancel-admin" class="btn-secondary" style="flex: 1; justify-content: center;">Cancelar</button>
-                <button id="btn-confirm-admin" class="btn-primary" style="flex: 1; justify-content: center;">Entrar</button>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Client Portal -->
     <div id="portal-section" class="client-container portal-view" style="display: none;">
@@ -79,7 +63,10 @@
                 <i class="ph-fill ph-tooth" style="color: var(--primary-color); font-size: 24px;"></i>
                 <h2 style="font-size: 20px; font-weight: 600;">CliniSync</h2>
             </div>
-            <button id="btn-logout" class="btn-secondary" style="padding: 8px 16px;">Sair</button>
+            <div style="display: flex; gap: 10px;">
+                <button id="btn-settings" class="btn-secondary" style="padding: 8px;" aria-label="Configurações"><i class="ph ph-gear" style="font-size: 20px;"></i></button>
+                <button id="btn-logout" class="btn-secondary" style="padding: 8px 16px;">Sair</button>
+            </div>
         </header>
 
         <h1 style="margin-bottom: 20px; font-size: 28px; font-weight: 300;"><span id="user-name" style="font-weight: 600;">Cliente</span></h1>
@@ -87,7 +74,17 @@
         <div class="points-card">
             <p style="font-size: 18px; opacity: 0.9;">Seu Saldo Atual</p>
             <h2 id="user-points">0 <span style="font-size: 20px; font-weight: normal;">Pontos</span></h2>
+            <div id="user-level-badge"></div>
             <p style="font-size: 14px; opacity: 0.8;">Ganhe pontos comparecendo às consultas e troque por descontos!</p>
+            <div class="progress-bar-container" id="progress-container">
+                <div class="progress-bar-label">
+                    <span id="progress-label-level">Nível atual</span>
+                    <span id="progress-label-next">Próximo nível</span>
+                </div>
+                <div class="progress-bar-track">
+                    <div class="progress-bar-fill" id="progress-fill" style="width: 0%;" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
         </div>
 
         <h3 style="margin-bottom: 15px;">Vitrine de Recompensas</h3>
@@ -120,6 +117,38 @@
             <p id="agenda-empty" style="color: var(--text-secondary); font-size: 14px; display: none;">Nenhuma consulta agendada.</p>
         </div>
 
+    </div>
+
+    <!-- Modal Configurações Cliente -->
+    <div id="modal-settings" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h3>Configurações de Perfil</h3>
+            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 24px;">Atualize seus dados e preferências.</p>
+            
+            <div class="form-grid" style="grid-template-columns: 1fr; gap: 16px;">
+                <div class="input-group">
+                    <label for="settings-name">Nome de Usuário</label>
+                    <input type="text" id="settings-name">
+                </div>
+                <div class="input-group">
+                    <label for="settings-telefone">Telefone</label>
+                    <input type="tel" id="settings-telefone" placeholder="(11) 99999-9999">
+                </div>
+                <div class="input-group">
+                    <label for="settings-email">E-mail</label>
+                    <input type="email" id="settings-email" placeholder="seu@email.com">
+                </div>
+                <div class="input-group">
+                    <label for="settings-pass">Nova Senha</label>
+                    <input type="password" id="settings-pass" placeholder="Digite para alterar ou deixe em branco">
+                </div>
+            </div>
+
+            <div class="form-actions" style="margin-top: 24px;">
+                <button id="btn-settings-cancel" class="btn-secondary">Cancelar</button>
+                <button id="btn-settings-save" class="btn-primary">Salvar Alterações</button>
+            </div>
+        </div>
     </div>
 </body>
 </html>
