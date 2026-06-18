@@ -293,14 +293,14 @@ async function loadRecompensas() {
                     ${nivelBadge}
                 </div>
                 <div class="rc-actions">
-                    <button onclick="editRecompensa('${doc.id}')" class="action-btn" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                    <button onclick="deleteRecompensa('${doc.id}')" class="action-btn delete" title="Excluir"><i class="ph ph-trash"></i></button>
+                    <button onclick="editRecompensa('${doc.id}')" class="action-btn" title="Editar" aria-label="Editar recompensa ${r.nome}"><i class="ph ph-pencil-simple" aria-hidden="true"></i></button>
+                    <button onclick="deleteRecompensa('${doc.id}')" class="action-btn delete" title="Excluir" aria-label="Excluir recompensa ${r.nome}"><i class="ph ph-trash" aria-hidden="true"></i></button>
                 </div>
             </div>
             <p class="rc-desc">${r.descricao || 'Sem descrição'}</p>
             <div class="rc-footer">
                 <span class="rc-value">${tipoLabel}</span>
-                <span class="rc-cost"><i class="ph ph-star" style="margin-right: 4px;"></i>${r.custoPontos} pts</span>
+                <span class="rc-cost"><i class="ph ph-star" aria-hidden="true" style="margin-right: 4px;"></i>${r.custoPontos} pts</span>
             </div>
         `;
         container.appendChild(card);
@@ -445,7 +445,7 @@ async function loadDashboard() {
                 <td data-label="Data">${dataStr}</td>
                 <td data-label="Cliente">${a.clienteNome}</td>
                 <td data-label="Serviço"><span class="tag-servico">${a.servicoNome}</span></td>
-                <td data-label="Receita" style="font-weight: 600; color: #22C55E;">+R$ ${preco.toFixed(2)}</td>
+                <td data-label="Receita" style="font-weight: 600; color: #15803D;">+R$ ${preco.toFixed(2)}</td>
             `;
             tbodyUltimas.appendChild(tr);
         });
@@ -494,9 +494,9 @@ function renderClientesTable() {
             <td data-label="E-mail">${c.email || '-'}</td>
             <td data-label="Pontos" style="color: var(--primary-color); font-weight: bold;">${c.pontos} pts</td>
             <td data-label="Ações">
-                <button onclick="whatsapp('${c.telefone}')" class="action-btn" title="WhatsApp" aria-label="Enviar WhatsApp para ${c.nome}"><i class="ph ph-whatsapp-logo" style="color: #25D366;"></i></button>
-                <button onclick="editCliente('${c.id}', '${c.nome}', '${c.telefone || ''}', '${c.email || ''}', '${c.aniversario || ''}', '${c.cpf || ''}')" class="action-btn" title="Editar" aria-label="Editar cliente ${c.nome}"><i class="ph ph-pencil-simple" style="color: var(--primary-color);"></i></button>
-                <button onclick="deleteCliente('${c.id}')" class="action-btn delete" title="Excluir" aria-label="Excluir cliente ${c.id}"><i class="ph ph-trash" style="color: var(--danger-color);"></i></button>
+                <button onclick="whatsapp('${c.telefone}')" class="action-btn" title="WhatsApp" aria-label="Enviar WhatsApp para ${c.nome}"><i class="ph ph-whatsapp-logo" aria-hidden="true" style="color: #25D366;"></i></button>
+                <button onclick="editCliente('${c.id}', '${c.nome}', '${c.telefone || ''}', '${c.email || ''}', '${c.aniversario || ''}', '${c.cpf || ''}')" class="action-btn" title="Editar" aria-label="Editar cliente ${c.nome}"><i class="ph ph-pencil-simple" aria-hidden="true" style="color: var(--primary-color);"></i></button>
+                <button onclick="deleteCliente('${c.id}')" class="action-btn delete" title="Excluir" aria-label="Excluir cliente ${c.nome}"><i class="ph ph-trash" aria-hidden="true" style="color: var(--danger-color);"></i></button>
             </td>
         `;
         tbody.appendChild(tr);
@@ -568,7 +568,7 @@ async function loadServicos() {
             <td data-label="Serviço">${s.nome}</td>
             <td data-label="Valor Base">R$ ${Number(s.valorPadrao).toFixed(2)}</td>
             <td data-label="Ações">
-                <button onclick="editServico('${doc.id}', '${s.nome}', ${s.valorPadrao})" class="action-btn" title="Editar"><i class="ph ph-pencil-simple" style="color: var(--text-primary);"></i></button>
+                <button onclick="editServico('${doc.id}', '${s.nome}', ${s.valorPadrao})" class="action-btn" title="Editar" aria-label="Editar serviço ${s.nome}"><i class="ph ph-pencil-simple" aria-hidden="true" style="color: var(--text-primary);"></i></button>
             </td>
         `;
         tbody.appendChild(tr);
@@ -688,7 +688,7 @@ function renderAgendaTable() {
         }
 
         let statusBadge = `<span class="badge-ok">Pendente</span>`;
-        if (a.status === 'CONCLUIDO') statusBadge = `<span class="badge-ok" style="background:#DCFCE7; color:#16A34A;">Concluído (+10pts)</span>`;
+        if (a.status === 'CONCLUIDO') statusBadge = `<span class="badge-ok" style="background:#DCFCE7; color:#15803D;">Concluído (+10pts)</span>`;
         if (a.status === 'FALTOU') statusBadge = `<span class="badge-danger">Faltou (-5pts)</span>`;
         if (a.status === 'CANCELADO') statusBadge = `<span class="badge-danger" style="background:#F3F4F6; color:#4B5563;">Cancelado</span>`;
         if (a.status === 'REAGENDADO') statusBadge = `<span class="badge-warning" style="background:#FEF3C7; color:#D97706;">Reagendado</span>`;
@@ -698,17 +698,17 @@ function renderAgendaTable() {
 
         if (a.status === 'CONCLUIDO') {
             if (a.pagamentoStatus === 'PAGO') {
-                pagamentoBadge = `<span class="badge-ok" style="background:#DCFCE7; color:#16A34A;">Pago</span>`;
+                pagamentoBadge = `<span class="badge-ok" style="background:#DCFCE7; color:#15803D;">Pago</span>`;
             } else {
                 pagamentoBadge = `<span class="badge-danger" style="background:#FFF0F0; color:#EF4444;">Pendente</span>`;
-                actionBtns += `<button onclick="updatePagamento('${a.id}')" class="action-btn" title="Marcar como Pago" style="color: #16A34A; border-color: #16A34A;"><i class="ph ph-currency-dollar"></i></button>`;
+                actionBtns += `<button onclick="updatePagamento('${a.id}')" class="action-btn" title="Marcar como Pago" aria-label="Marcar pagamento como pago" style="color: #15803D; border-color: #15803D;"><i class="ph ph-currency-dollar" aria-hidden="true"></i></button>`;
             }
         }
 
         if (a.status === 'PENDENTE' || a.status === 'REAGENDADO') {
             actionBtns += `
-                <button onclick="updateStatus('${a.id}', '${a.clienteId}', 'CONCLUIDO', '${a.servicoNome}')" class="action-btn" title="Marcar Presença" style="color: #16A34A;"><i class="ph ph-check"></i></button>
-                <button onclick="updateStatus('${a.id}', '${a.clienteId}', 'CANCELADO', '${a.servicoNome}')" class="action-btn" title="Cancelar Agendamento" style="color: #6B7280;"><i class="ph ph-prohibit"></i></button>
+                <button onclick="updateStatus('${a.id}', '${a.clienteId}', 'CONCLUIDO', '${a.servicoNome}')" class="action-btn" title="Marcar Presença" aria-label="Marcar presença de ${a.clienteNome}" style="color: #15803D;"><i class="ph ph-check" aria-hidden="true"></i></button>
+                <button onclick="updateStatus('${a.id}', '${a.clienteId}', 'CANCELADO', '${a.servicoNome}')" class="action-btn" title="Cancelar Agendamento" aria-label="Cancelar agendamento de ${a.clienteNome}" style="color: #6B7280;"><i class="ph ph-prohibit" aria-hidden="true"></i></button>
             `;
         }
 
@@ -724,9 +724,9 @@ function renderAgendaTable() {
         }
 
         if (a.status === 'PENDENTE' || a.status === 'REAGENDADO') {
-            actionBtns += `<button onclick="whatsappLembrete('${a.clienteTelefone}', '${a.servicoNome}', '${a.dataHora}')" class="${reminderClass}" title="Lembrete WPP"><i class="ph ph-whatsapp-logo"${!dateCategory ? ' style="color: #25D366;"' : ''}></i>${reminderLabel}</button>`;
+            actionBtns += `<button onclick="whatsappLembrete('${a.clienteTelefone}', '${a.servicoNome}', '${a.dataHora}')" class="${reminderClass}" title="Lembrete WPP" aria-label="Enviar lembrete por WhatsApp para ${a.clienteNome}"><i class="ph ph-whatsapp-logo" aria-hidden="true"${!dateCategory ? ' style="color: #25D366;"' : ''}></i>${reminderLabel}</button>`;
         }
-        actionBtns += `<button onclick="editAgenda('${a.id}')" class="action-btn" title="Editar Agendamento" style="color: #3B82F6;"><i class="ph ph-pencil"></i></button>`;
+        actionBtns += `<button onclick="editAgenda('${a.id}')" class="action-btn" title="Editar Agendamento" aria-label="Editar agendamento de ${a.clienteNome}" style="color: #3B82F6;"><i class="ph ph-pencil" aria-hidden="true"></i></button>`;
 
         tr.innerHTML = `
             <td data-label="Data e Hora">${dataStr}${dateAlertBadge}</td>
@@ -1200,7 +1200,7 @@ async function onSimuladorChange(e) {
             extrato.forEach(t => {
                 const isPositive = t.pontos > 0;
                 const sign = isPositive ? '+' : '';
-                const color = isPositive ? '#22C55E' : 'var(--danger-color)';
+                const color = isPositive ? '#15803D' : 'var(--danger-color)';
                 const dateStr = new Date(t.dataTransacao).toLocaleDateString('pt-BR');
                 
                 listaEl.innerHTML += `

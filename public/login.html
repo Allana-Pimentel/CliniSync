@@ -12,8 +12,10 @@
     <meta property="og:url" content="https://clinicsync-af312.web.app/login.html">
     <title>CliniSync - Admin Login</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script defer src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         body {
             display: flex;
@@ -119,15 +121,16 @@
 </head>
 <body>
 
+    <main>
     <div class="login-card">
         <div class="login-header">
-            <i class="ph-duotone ph-shield-check"></i>
+            <i class="ph-duotone ph-shield-check" aria-hidden="true"></i>
             <h1>Painel Admin</h1>
             <p>CliniSync Gestão</p>
         </div>
 
-        <div id="login-error">
-            <i class="ph ph-warning-circle"></i> Usuário ou senha incorretos.
+        <div id="login-error" role="alert">
+            <i class="ph ph-warning-circle" aria-hidden="true"></i> Usuário ou senha incorretos.
         </div>
 
         <div class="input-group">
@@ -140,13 +143,14 @@
         </div>
 
         <button id="btn-login-admin" class="btn-primary btn-login" aria-label="Entrar no painel administrativo">
-            Entrar no Sistema <i class="ph ph-arrow-right"></i>
+            Entrar no Sistema <i class="ph ph-arrow-right" aria-hidden="true"></i>
         </button>
 
         <a href="index.html" class="back-link">
-            <i class="ph ph-arrow-left"></i> Voltar ao Portal do Cliente
+            <i class="ph ph-arrow-left" aria-hidden="true"></i> Voltar ao Portal do Cliente
         </a>
     </div>
+    </main>
 
     <script>
         document.getElementById('btn-login-admin').addEventListener('click', () => {

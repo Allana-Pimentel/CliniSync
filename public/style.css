@@ -1,10 +1,10 @@
 :root {
     --bg-color: #F0F9FF;
     --surface-color: #FFFFFF;
-    --primary-color: #0EA5E9;
-    --primary-hover: #0284C7;
+    --primary-color: #0369A1;
+    --primary-hover: #075985;
     --text-primary: #1E293B;
-    --text-secondary: #64748B;
+    --text-secondary: #536478;
     --danger-color: #EF4444;
     --border-color: #E0F2FE;
     --shadow: 0 8px 30px rgba(14, 165, 233, 0.15);
@@ -43,6 +43,21 @@ body {
     overflow-y: auto;
     font-size: 15px;
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Focus Visible - Acessibilidade por teclado */
+:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
 }
 
 /* Sidebar */
@@ -280,7 +295,7 @@ nav {
 
 .badge-ok {
     background-color: #F0FDF4;
-    color: #22C55E;
+    color: #15803D;
     padding: 6px 10px;
     border-radius: 6px;
     font-size: 12px;
@@ -703,6 +718,7 @@ input:checked+.slider:before {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    min-height: 44px;
 }
 
 .btn-primary:hover {
@@ -725,6 +741,7 @@ input:checked+.slider:before {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    min-height: 44px;
 }
 
 .btn-secondary:hover {

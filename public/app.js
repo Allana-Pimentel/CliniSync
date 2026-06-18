@@ -240,7 +240,7 @@ async function atualizarPainelCliente() {
             li.innerHTML = `
                 <div>
                     <p style="font-weight: 500; font-size: 16px;">${a.servicoNome}</p>
-                    <p style="font-size: 14px; color: var(--text-secondary);"><i class="ph ph-calendar"></i> ${dataStr} às ${horaStr}</p>
+                    <p style="font-size: 14px; color: var(--text-secondary);"><i class="ph ph-calendar" aria-hidden="true"></i> ${dataStr} às ${horaStr}</p>
                 </div>
                 <div style="display: flex; align-items: center; color: var(--primary-color); font-weight: 600;">
                     +10 pts
@@ -358,7 +358,7 @@ async function carregarConfiguracoes() {
 
         card.innerHTML = `
             ${badgeHtml}
-            <i class="ph-duotone ${iconName}" style="font-size: 40px; color: ${bloqueado ? 'var(--text-secondary)' : 'var(--primary-color)'};"></i>
+            <i class="ph-duotone ${iconName}" aria-hidden="true" style="font-size: 40px; color: ${bloqueado ? 'var(--text-secondary)' : 'var(--primary-color)'};"></i>
             <h3>${r.nome}</h3>
             <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 15px;">${r.descricao || ''}</p>
             <div style="font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px;">
