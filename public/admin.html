@@ -3,6 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CliniSync — Painel Administrativo. Gerencie clientes, agenda, serviços e recompensas da sua clínica odontológica com gamificação.">
+    <!-- Open Graph (WhatsApp / Redes Sociais) -->
+    <meta property="og:title" content="CliniSync — Painel Admin">
+    <meta property="og:description" content="Gerencie clientes, agenda, serviços e recompensas da sua clínica odontológica com gamificação.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://clinicsync-af312.web.app/og-image.png">
+    <meta property="og:url" content="https://clinicsync-af312.web.app/admin.html">
     <title>CliniSync - Admin</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -14,7 +21,12 @@
     <script defer src="admin.js"></script>
 </head>
 <body>
-    <div class="sidebar">
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Abrir menu">
+        <i class="ph ph-list"></i>
+    </button>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="sidebar" id="sidebar">
         <div class="logo-container">
             <h1 class="logo"><i class="ph-fill ph-tooth"></i> CliniSync</h1>
             <p class="subtitle">Gestão & Gamificação</p>
@@ -24,43 +36,157 @@
             <button class="nav-btn" data-view="agenda"><i class="ph ph-calendar-blank"></i> Agenda</button>
             <button class="nav-btn" data-view="clientes"><i class="ph ph-users"></i> Clientes</button>
             <button class="nav-btn" data-view="servicos"><i class="ph ph-list-dashes"></i> Serviços</button>
-            <button class="nav-btn" data-view="config"><i class="ph ph-gear"></i> Configurações</button>
+            <button class="nav-btn" data-view="recompensas"><i class="ph ph-gift"></i> Recompensas</button>
+            <button class="nav-btn" data-view="simulador"><i class="ph ph-device-mobile"></i> Visão Cliente</button>
         </nav>
+        <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border-color);">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; margin-bottom: 8px;">
+                <span style="font-size: 14px; color: var(--text-secondary); font-weight: 500;">Modo Noturno</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="admin-theme-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <button id="btn-logout-admin" class="nav-btn" style="width: 100%; color: var(--danger-color);">
+                <i class="ph ph-sign-out"></i> Sair do Painel
+            </button>
+        </div>
     </div>
 
     <main class="content">
         <!-- Dashboard -->
         <section id="view-dashboard" class="view-section active">
             <header class="section-header">
-                <h2>Dashboard & Ranking</h2>
+                <h2>Dashboard de Desempenho</h2>
             </header>
-            <div class="card">
-                <h3 style="margin-bottom: 20px;">Ranking de Assiduidade (Pontos)</h3>
-                <table class="clients-table">
-                    <thead>
-                        <tr>
-                            <th>Posição</th>
-                            <th>Cliente</th>
-                            <th>Pontos Atuais</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ranking-tbody">
-                        <!-- JS injects here -->
-                    </tbody>
-                </table>
+            
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: rgba(14, 165, 233, 0.1); color: var(--primary-color);"><i class="ph-fill ph-currency-dollar"></i></div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Receita do Mês</span>
+                        <span class="kpi-value" id="kpi-receita">R$ 0,00</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: rgba(34, 197, 94, 0.1); color: #22C55E;"><i class="ph-fill ph-users"></i></div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Total de Clientes</span>
+                        <span class="kpi-value" id="kpi-clientes">0</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class="ph-fill ph-calendar-check"></i></div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Consultas no Mês</span>
+                        <span class="kpi-value" id="kpi-consultas">0</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;"><i class="ph-fill ph-clock-countdown"></i></div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Receita Pendente</span>
+                        <span class="kpi-value" id="kpi-receita-pendente" style="font-size: 22px;">R$ 0,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-tables">
+                <div class="card">
+                    <h3 style="margin-bottom: 20px;">Ranking de Assiduidade</h3>
+                    <div class="table-responsive">
+                        <table class="clients-table">
+                            <thead>
+                                <tr>
+                                    <th>Pos</th>
+                                    <th>Cliente</th>
+                                    <th>Pontos</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ranking-tbody">
+                                <!-- JS injects here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 style="margin-bottom: 20px;">Últimos Atendimentos</h3>
+                    <div class="table-responsive">
+                        <table class="clients-table">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Cliente</th>
+                                    <th>Serviço</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ultimas-consultas-tbody">
+                                <!-- JS injects here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- Agenda -->
         <section id="view-agenda" class="view-section">
-            <header class="section-header">
+            <header class="section-header" style="flex-wrap: wrap; gap: 15px;">
                 <h2>Agenda do Consultório</h2>
-                <button class="btn-primary" id="btn-add-agenda"><i class="ph ph-plus"></i> Novo Agendamento</button>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <div class="view-toggle" style="display: flex; background: var(--bg-color); border-radius: 8px; padding: 4px; border: 1px solid var(--border-color);">
+                        <button id="btn-view-lista" class="toggle-btn active" style="padding: 6px 12px; border: none; background: var(--surface-color); border-radius: 6px; box-shadow: var(--shadow-sm); cursor: pointer; font-size: 14px; font-weight: 500;"><i class="ph ph-list"></i> Lista</button>
+                        <button id="btn-view-calendario" class="toggle-btn" style="padding: 6px 12px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; font-size: 14px; font-weight: 500;"><i class="ph ph-calendar-blank"></i> Semana</button>
+                    </div>
+                    <button class="btn-secondary" id="btn-config-agenda" title="Configurar Horários" aria-label="Configurar horários da agenda"><i class="ph ph-gear"></i></button>
+                    <button class="btn-primary" id="btn-add-agenda"><i class="ph ph-plus"></i> Novo Agendamento</button>
+                </div>
             </header>
+
+            <!-- Config Agenda Modal -->
+            <div id="modal-agenda-config" class="card hidden" style="margin-bottom: 24px; border: 1px solid var(--border-color); background: var(--bg-color);">
+                <h3 style="margin-bottom: 20px;">Configurações de Horário</h3>
+                <div class="form-grid">
+                    <div class="input-group full-width">
+                        <label>Dias de Funcionamento</label>
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 8px;" id="agenda-dias-container">
+                            <label style="display: flex; align-items: center; gap: 5px; font-weight: 400; text-transform: none;"><input type="checkbox" value="1" checked> Seg</label>
+                            <label style="display: flex; align-items: center; gap: 5px; font-weight: 400; text-transform: none;"><input type="checkbox" value="2" checked> Ter</label>
+                            <label style="display: flex; align-items: center; gap: 5px; font-weight: 400; text-transform: none;"><input type="checkbox" value="3" checked> Qua</label>
+                            <label style="display: flex; align-items: center; gap: 5px; font-weight: 400; text-transform: none;"><input type="checkbox" value="4" checked> Qui</label>
+                            <label style="display: flex; align-items: center; gap: 5px; font-weight: 400; text-transform: none;"><input type="checkbox" value="5" checked> Sex</label>
+                            <label style="display: flex; align-items: center; gap: 5px; font-weight: 400; text-transform: none;"><input type="checkbox" value="6"> Sáb</label>
+                            <label style="display: flex; align-items: center; gap: 5px; font-weight: 400; text-transform: none;"><input type="checkbox" value="0"> Dom</label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Hora Início</label>
+                        <input type="time" id="config-hora-inicio" value="06:00">
+                    </div>
+                    <div class="input-group">
+                        <label>Hora Fim</label>
+                        <input type="time" id="config-hora-fim" value="22:00">
+                    </div>
+                    <div class="input-group">
+                        <label>Intervalo (minutos)</label>
+                        <select id="config-intervalo">
+                            <option value="15">15 min</option>
+                            <option value="30" selected>30 min</option>
+                            <option value="60">1 hora</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-secondary" id="btn-cancel-config">Cancelar</button>
+                    <button class="btn-primary" id="btn-save-config">Salvar Configurações</button>
+                </div>
+            </div>
             
             <div id="modal-agenda" class="card hidden" style="margin-bottom: 24px; border: 1px solid var(--primary-color);">
-                <h3 style="margin-bottom: 20px;">Adicionar Agendamento</h3>
+                <h3 style="margin-bottom: 20px;">Adicionar/Editar Agendamento</h3>
+                <input type="hidden" id="agenda-id">
                 <div class="form-grid">
                     <div class="input-group">
                         <label>Cliente</label>
@@ -74,6 +200,22 @@
                         <label>Data/Hora</label>
                         <input type="datetime-local" id="agenda-datahora">
                     </div>
+                    <div class="input-group">
+                        <label for="agenda-status">Status</label>
+                        <select id="agenda-status">
+                            <option value="PENDENTE">Pendente</option>
+                            <option value="CONCLUIDO">Concluído</option>
+                            <option value="CANCELADO">Cancelado</option>
+                            <option value="REAGENDADO">Reagendado</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="agenda-pagamento">Pagamento</label>
+                        <select id="agenda-pagamento">
+                            <option value="PENDENTE">Pendente</option>
+                            <option value="PAGO">Pago</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-actions">
                     <button class="btn-secondary" id="btn-cancel-agenda">Cancelar</button>
@@ -81,45 +223,84 @@
                 </div>
             </div>
 
-            <div class="card">
-                <table class="clients-table">
-                    <thead>
-                        <tr>
-                            <th>Data e Hora</th>
-                            <th>Cliente</th>
-                            <th>Serviço</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="agenda-tbody">
-                        <!-- JS injects here -->
-                    </tbody>
-                </table>
+            <div id="agenda-list-view" class="card">
+                <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <input type="text" id="agenda-search" placeholder="Pesquisar cliente ou serviço..." style="flex: 1; min-width: 200px; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px;">
+                    <select id="agenda-filter-status" style="padding: 10px; border: 1px solid var(--border-color); border-radius: 8px;">
+                        <option value="">Todos os Status</option>
+                        <option value="PENDENTE">Pendente</option>
+                        <option value="CONCLUIDO">Concluído</option>
+                        <option value="CANCELADO">Cancelado</option>
+                        <option value="REAGENDADO">Reagendado</option>
+                    </select>
+                </div>
+                <div class="table-responsive">
+                    <table class="clients-table">
+                        <thead>
+                            <tr>
+                                <th>Data e Hora</th>
+                                <th>Cliente</th>
+                                <th>Serviço</th>
+                                <th>Status</th>
+                                <th>Pagamento</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="agenda-tbody">
+                            <!-- JS injects here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Calendar View -->
+            <div id="agenda-calendar-view" class="card hidden" style="padding: 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid var(--border-color);">
+                    <button class="btn-secondary" id="btn-prev-week" style="padding: 6px 12px;"><i class="ph ph-caret-left"></i> Anterior</button>
+                    <h3 id="calendar-week-label" style="font-size: 16px; margin: 0;">Semana Atual</h3>
+                    <button class="btn-secondary" id="btn-next-week" style="padding: 6px 12px;">Próxima <i class="ph ph-caret-right"></i></button>
+                </div>
+                <div class="calendar-container" style="overflow-x: auto; padding: 20px;">
+                    <div id="calendar-grid" class="calendar-grid">
+                        <!-- JS injects calendar here -->
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- Clientes -->
         <section id="view-clientes" class="view-section">
             <header class="section-header">
-                <h2>Meus Clientes</h2>
+                <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; flex: 1;">
+                    <h2>Meus Clientes</h2>
+                    <input type="text" id="clientes-search" placeholder="Pesquisar por Nome, CPF ou Telefone..." style="max-width: 300px; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; flex: 1;">
+                </div>
                 <button class="btn-primary" id="btn-add-cliente"><i class="ph ph-plus"></i> Novo Cliente</button>
             </header>
 
             <div id="modal-cliente" class="card hidden" style="margin-bottom: 24px; border: 1px solid var(--primary-color);">
                 <h3 style="margin-bottom: 20px;">Cadastrar Cliente</h3>
                 <div class="form-grid">
-                    <div class="input-group">
-                        <label>Nome Completo</label>
-                        <input type="text" id="cliente-nome">
+                    <div class="input-group full-width">
+                        <input type="hidden" id="cliente-id">
+                        <label for="cliente-nome">Nome Completo</label>
+                        <input type="text" id="cliente-nome" placeholder="Ex: João da Silva">
                     </div>
                     <div class="input-group">
-                        <label>Telefone (WhatsApp)</label>
-                        <input type="text" id="cliente-telefone" placeholder="5511999999999">
+                        <label for="cliente-cpf">CPF</label>
+                        <input type="text" id="cliente-cpf" placeholder="000.000.000-00">
                     </div>
                     <div class="input-group">
-                        <label>E-mail</label>
+                        <label for="cliente-telefone">Telefone</label>
+                        <input type="tel" id="cliente-telefone" placeholder="(11) 99999-9999">
+                    </div>
+                    <div class="input-group">
+                        <label for="cliente-email">E-mail</label>
                         <input type="email" id="cliente-email" placeholder="cliente@email.com">
+                    </div>
+                    <div class="input-group">
+                        <label for="cliente-aniversario">Data de Aniversário</label>
+                        <input type="date" id="cliente-aniversario">
                     </div>
                 </div>
                 <div class="form-actions">
@@ -129,20 +310,23 @@
             </div>
 
             <div class="card">
-                <table class="clients-table">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Telefone</th>
-                            <th>E-mail</th>
-                            <th>Pontos</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="clientes-tbody">
-                        <!-- JS injects here -->
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="clients-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>CPF</th>
+                                <th>Telefone</th>
+                                <th>E-mail</th>
+                                <th>Pontos</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clientes-tbody">
+                            <!-- JS injects here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
@@ -173,51 +357,126 @@
             </div>
 
             <div class="card">
-                <table class="clients-table">
-                    <thead>
-                        <tr>
-                            <th>Serviço</th>
-                            <th>Valor (R$)</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="servicos-tbody">
-                        <!-- JS injects here -->
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="clients-table">
+                        <thead>
+                            <tr>
+                                <th>Serviço</th>
+                                <th>Valor (R$)</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="servicos-tbody">
+                            <!-- JS injects here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
-        <!-- Configurações -->
-        <section id="view-config" class="view-section">
+        <!-- Recompensas -->
+        <section id="view-recompensas" class="view-section">
             <header class="section-header">
-                <h2>Configurações de Recompensas</h2>
-                <button class="btn-primary" id="btn-save-config"><i class="ph ph-floppy-disk"></i> Salvar</button>
+                <h2>Recompensas & Benefícios</h2>
+                <button class="btn-primary" id="btn-add-recompensa"><i class="ph ph-plus"></i> Nova Recompensa</button>
             </header>
-            <div class="card">
-                <h3 style="margin-bottom: 20px;">Cupom 1</h3>
+
+            <div id="modal-recompensa" class="card hidden" style="margin-bottom: 24px; border: 1px solid var(--primary-color);">
+                <h3 style="margin-bottom: 20px;">Cadastrar/Editar Recompensa</h3>
+                <input type="hidden" id="recompensa-id">
                 <div class="form-grid">
                     <div class="input-group">
-                        <label>Percentual de Desconto (%)</label>
-                        <input type="number" id="config-cupom1-perc" value="10">
+                        <label>Nome da Recompensa</label>
+                        <input type="text" id="recompensa-nome" placeholder="Ex: Desconto na Limpeza">
+                    </div>
+                    <div class="input-group">
+                        <label>Tipo</label>
+                        <select id="recompensa-tipo">
+                            <option value="desconto">Desconto (%)</option>
+                            <option value="bonus">Bônus Fixo (R$)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Valor (% ou R$)</label>
+                        <input type="number" step="0.01" id="recompensa-valor" placeholder="10">
+                    </div>
+                    <div class="input-group">
+                        <label>Nível Mínimo</label>
+                        <select id="recompensa-nivel">
+                            <option value="">Todos (Sem restrição)</option>
+                            <option value="prata">Apenas Prata e superior</option>
+                            <option value="ouro">Apenas Ouro e superior</option>
+                            <option value="diamante">Apenas Diamante</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="flex-direction: row; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="recompensa-visivel" checked style="width: auto; height: 16px;">
+                        <label for="recompensa-visivel" style="margin: 0; font-weight: normal; font-size: 14px; cursor: pointer;">Deixar visível (trancado) para níveis inferiores?</label>
+                    </div>
+                    <div class="input-group full-width" style="flex-direction: row; align-items: center; gap: 8px; margin-top: -10px;">
+                        <input type="checkbox" id="recompensa-aniversario" style="width: auto; height: 16px;">
+                        <label for="recompensa-aniversario" style="margin: 0; font-weight: bold; color: var(--primary-color); font-size: 14px; cursor: pointer;">🎂 É Recompensa de Aniversário (Aparece apenas no mês do cliente)</label>
                     </div>
                     <div class="input-group">
                         <label>Custo em Pontos</label>
-                        <input type="number" id="config-cupom1-pts" value="50">
+                        <input type="number" id="recompensa-custo" placeholder="50">
+                    </div>
+                    <div class="input-group full-width">
+                        <label>Descrição</label>
+                        <input type="text" id="recompensa-desc" placeholder="Ex: Em qualquer procedimento">
                     </div>
                 </div>
-                
-                <h3 style="margin-bottom: 20px; margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px;">Cupom 2</h3>
-                <div class="form-grid">
-                    <div class="input-group">
-                        <label>Percentual de Desconto (%)</label>
-                        <input type="number" id="config-cupom2-perc" value="20">
-                    </div>
-                    <div class="input-group">
-                        <label>Custo em Pontos</label>
-                        <input type="number" id="config-cupom2-pts" value="100">
+                <div class="form-actions">
+                    <button class="btn-secondary" id="btn-cancel-recompensa">Cancelar</button>
+                    <button class="btn-primary" id="btn-save-recompensa">Salvar</button>
+                </div>
+            </div>
+
+            <div class="recompensas-grid" id="recompensas-container">
+                <!-- JS injects here -->
+            </div>
+            <p id="recompensas-empty" class="hidden" style="color: var(--text-secondary); text-align: center; padding: 40px; font-size: 15px;">Nenhuma recompensa cadastrada. Clique em "Nova Recompensa" para começar.</p>
+        </section>
+
+        <!-- Visão Cliente (Simulador) -->
+        <section id="view-simulador" class="view-section">
+            <header class="section-header">
+                <h2>Visão do Cliente (Simulador)</h2>
+                <p style="color: var(--text-secondary); margin-top: 5px; font-size: 14px;">Visualize o portal exatamente como um de seus clientes veria.</p>
+            </header>
+
+            <div class="card" style="margin-bottom: 24px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Selecione o Cliente</label>
+                <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                    <input type="text" id="simulador-search" placeholder="Filtrar por CPF ou Nome..." style="max-width: 300px; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; flex: 1;">
+                    <select id="simulador-client-select" style="max-width: 400px; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color); color: var(--text-primary); flex: 2;">
+                        <option value="">Selecione um cliente...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="simulador-portal" style="display: none; max-width: 500px; margin: 0 auto; background: var(--bg-color); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color);">
+                <div class="points-card">
+                    <p style="font-size: 18px; opacity: 0.9;">Seu Saldo Atual</p>
+                    <h2 id="simulador-points">0 <span style="font-size: 20px; font-weight: normal;">Pontos</span></h2>
+                    <div id="simulador-level-badge"></div>
+                    <p style="font-size: 14px; opacity: 0.8;">Ganhe pontos comparecendo às consultas e troque por descontos!</p>
+                    <div class="progress-bar-container" id="simulador-progress-container">
+                        <div class="progress-bar-label">
+                            <span id="simulador-progress-label-level">Nível atual</span>
+                            <span id="simulador-progress-label-next">Próximo nível</span>
+                        </div>
+                        <div class="progress-bar-track">
+                            <div class="progress-bar-fill" id="simulador-progress-fill" style="width: 0%;" role="progressbar"></div>
+                        </div>
                     </div>
                 </div>
+
+                <h3 style="margin: 20px 0 10px 0;">Extrato</h3>
+                <div id="simulador-extrato-lista" style="display: flex; flex-direction: column; gap: 10px;"></div>
+            </div>
+            <div id="simulador-empty" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                Selecione um cliente acima para visualizar o portal dele.
             </div>
         </section>
 
