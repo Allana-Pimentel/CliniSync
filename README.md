@@ -126,6 +126,11 @@ CliniSync/
 | Nome | GitHub |
 |------|--------|
 | Allana Pimentel | [@Allana-Pimentel](https://github.com/Allana-Pimentel) |
+| Sâmya Ketully de Moraes Sotero | [@SamyaKetully](https://github.com/SamyaKetully/) |
+| Lorenzo Gauto Vendrame | [@lorenzovendrame](https://github.com/lorenzovendrame) |
+| Celso José de Britto Filho | [@Celsosixsix](https://github.com/Celsosixsix) |
+| Julia Dias | [@jjulinha](https://github.com/jjulinha/) |
+
 
 ---
 
