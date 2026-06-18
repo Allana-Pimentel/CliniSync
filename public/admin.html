@@ -12,8 +12,10 @@
     <meta property="og:url" content="https://clinicsync-af312.web.app/admin.html">
     <title>CliniSync - Admin</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script defer src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- Firebase SDKs -->
     <script defer src="/__/firebase/10.11.1/firebase-app-compat.js"></script>
     <script defer src="/__/firebase/10.11.1/firebase-firestore-compat.js"></script>
@@ -22,33 +24,33 @@
 </head>
 <body>
     <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Abrir menu">
-        <i class="ph ph-list"></i>
+        <i class="ph ph-list" aria-hidden="true"></i>
     </button>
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
     <div class="sidebar" id="sidebar">
         <div class="logo-container">
-            <h1 class="logo"><i class="ph-fill ph-tooth"></i> CliniSync</h1>
+            <h1 class="logo"><i class="ph-fill ph-tooth" aria-hidden="true"></i> CliniSync</h1>
             <p class="subtitle">Gestão & Gamificação</p>
         </div>
-        <nav>
-            <button class="nav-btn active" data-view="dashboard"><i class="ph ph-squares-four"></i> Dashboard</button>
-            <button class="nav-btn" data-view="agenda"><i class="ph ph-calendar-blank"></i> Agenda</button>
-            <button class="nav-btn" data-view="clientes"><i class="ph ph-users"></i> Clientes</button>
-            <button class="nav-btn" data-view="servicos"><i class="ph ph-list-dashes"></i> Serviços</button>
-            <button class="nav-btn" data-view="recompensas"><i class="ph ph-gift"></i> Recompensas</button>
-            <button class="nav-btn" data-view="simulador"><i class="ph ph-device-mobile"></i> Visão Cliente</button>
+        <nav aria-label="Menu principal">
+            <button class="nav-btn active" data-view="dashboard"><i class="ph ph-squares-four" aria-hidden="true"></i> Dashboard</button>
+            <button class="nav-btn" data-view="agenda"><i class="ph ph-calendar-blank" aria-hidden="true"></i> Agenda</button>
+            <button class="nav-btn" data-view="clientes"><i class="ph ph-users" aria-hidden="true"></i> Clientes</button>
+            <button class="nav-btn" data-view="servicos"><i class="ph ph-list-dashes" aria-hidden="true"></i> Serviços</button>
+            <button class="nav-btn" data-view="recompensas"><i class="ph ph-gift" aria-hidden="true"></i> Recompensas</button>
+            <button class="nav-btn" data-view="simulador"><i class="ph ph-device-mobile" aria-hidden="true"></i> Visão Cliente</button>
         </nav>
         <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border-color);">
             <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; margin-bottom: 8px;">
                 <span style="font-size: 14px; color: var(--text-secondary); font-weight: 500;">Modo Noturno</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="admin-theme-toggle">
+                <label class="toggle-switch" for="admin-theme-toggle">
+                    <input type="checkbox" id="admin-theme-toggle" aria-label="Alternar modo noturno">
                     <span class="slider"></span>
                 </label>
             </div>
             <button id="btn-logout-admin" class="nav-btn" style="width: 100%; color: var(--danger-color);">
-                <i class="ph ph-sign-out"></i> Sair do Painel
+                <i class="ph ph-sign-out" aria-hidden="true"></i> Sair do Painel
             </button>
         </div>
     </div>
@@ -62,28 +64,28 @@
             
             <div class="kpi-grid">
                 <div class="kpi-card">
-                    <div class="kpi-icon" style="background: rgba(14, 165, 233, 0.1); color: var(--primary-color);"><i class="ph-fill ph-currency-dollar"></i></div>
+                    <div class="kpi-icon" style="background: rgba(14, 165, 233, 0.1); color: var(--primary-color);"><i class="ph-fill ph-currency-dollar" aria-hidden="true"></i></div>
                     <div class="kpi-info">
                         <span class="kpi-label">Receita do Mês</span>
                         <span class="kpi-value" id="kpi-receita">R$ 0,00</span>
                     </div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-icon" style="background: rgba(34, 197, 94, 0.1); color: #22C55E;"><i class="ph-fill ph-users"></i></div>
+                    <div class="kpi-icon" style="background: rgba(34, 197, 94, 0.1); color: #22C55E;"><i class="ph-fill ph-users" aria-hidden="true"></i></div>
                     <div class="kpi-info">
                         <span class="kpi-label">Total de Clientes</span>
                         <span class="kpi-value" id="kpi-clientes">0</span>
                     </div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class="ph-fill ph-calendar-check"></i></div>
+                    <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class="ph-fill ph-calendar-check" aria-hidden="true"></i></div>
                     <div class="kpi-info">
                         <span class="kpi-label">Consultas no Mês</span>
                         <span class="kpi-value" id="kpi-consultas">0</span>
                     </div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-icon" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;"><i class="ph-fill ph-clock-countdown"></i></div>
+                    <div class="kpi-icon" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;"><i class="ph-fill ph-clock-countdown" aria-hidden="true"></i></div>
                     <div class="kpi-info">
                         <span class="kpi-label">Receita Pendente</span>
                         <span class="kpi-value" id="kpi-receita-pendente" style="font-size: 22px;">R$ 0,00</span>
@@ -137,21 +139,21 @@
                 <h2>Agenda do Consultório</h2>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                     <div class="view-toggle" style="display: flex; background: var(--bg-color); border-radius: 8px; padding: 4px; border: 1px solid var(--border-color);">
-                        <button id="btn-view-lista" class="toggle-btn active" style="padding: 6px 12px; border: none; background: var(--surface-color); border-radius: 6px; box-shadow: var(--shadow-sm); cursor: pointer; font-size: 14px; font-weight: 500;"><i class="ph ph-list"></i> Lista</button>
-                        <button id="btn-view-calendario" class="toggle-btn" style="padding: 6px 12px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; font-size: 14px; font-weight: 500;"><i class="ph ph-calendar-blank"></i> Semana</button>
+                        <button id="btn-view-lista" class="toggle-btn active" style="padding: 6px 12px; border: none; background: var(--surface-color); border-radius: 6px; box-shadow: var(--shadow-sm); cursor: pointer; font-size: 14px; font-weight: 500;"><i class="ph ph-list" aria-hidden="true"></i> Lista</button>
+                        <button id="btn-view-calendario" class="toggle-btn" style="padding: 6px 12px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; font-size: 14px; font-weight: 500;"><i class="ph ph-calendar-blank" aria-hidden="true"></i> Semana</button>
                     </div>
-                    <button class="btn-secondary" id="btn-config-agenda" title="Configurar Horários" aria-label="Configurar horários da agenda"><i class="ph ph-gear"></i></button>
-                    <button class="btn-primary" id="btn-add-agenda"><i class="ph ph-plus"></i> Novo Agendamento</button>
+                    <button class="btn-secondary" id="btn-config-agenda" title="Configurar Horários" aria-label="Configurar horários da agenda"><i class="ph ph-gear" aria-hidden="true"></i></button>
+                    <button class="btn-primary" id="btn-add-agenda"><i class="ph ph-plus" aria-hidden="true"></i> Novo Agendamento</button>
                 </div>
             </header>
 
             <!-- Config Agenda Modal -->
-            <div id="modal-agenda-config" class="card hidden" style="margin-bottom: 24px; border: 1px solid var(--border-color); background: var(--bg-color);">
+            <div id="modal-agenda-config" class="card hidden" role="region" aria-label="Configurações de Horário" style="margin-bottom: 24px; border: 1px solid var(--border-color); background: var(--bg-color);">
                 <h3 style="margin-bottom: 20px;">Configurações de Horário</h3>
                 <div class="form-grid">
                     <div class="input-group full-width">
-                        <label>Dias de Funcionamento</label>
-                        <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 8px;" id="agenda-dias-container">
+                        <label id="label-dias-func">Dias de Funcionamento</label>
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 8px;" id="agenda-dias-container" role="group" aria-labelledby="label-dias-func">
                             <label style="display: flex; align-items: center; gap: 5px; font-weight: 400; text-transform: none;"><input type="checkbox" value="1" checked> Seg</label>
                             <label style="display: flex; align-items: center; gap: 5px; font-weight: 400; text-transform: none;"><input type="checkbox" value="2" checked> Ter</label>
                             <label style="display: flex; align-items: center; gap: 5px; font-weight: 400; text-transform: none;"><input type="checkbox" value="3" checked> Qua</label>
@@ -162,15 +164,15 @@
                         </div>
                     </div>
                     <div class="input-group">
-                        <label>Hora Início</label>
+                        <label for="config-hora-inicio">Hora Início</label>
                         <input type="time" id="config-hora-inicio" value="06:00">
                     </div>
                     <div class="input-group">
-                        <label>Hora Fim</label>
+                        <label for="config-hora-fim">Hora Fim</label>
                         <input type="time" id="config-hora-fim" value="22:00">
                     </div>
                     <div class="input-group">
-                        <label>Intervalo (minutos)</label>
+                        <label for="config-intervalo">Intervalo (minutos)</label>
                         <select id="config-intervalo">
                             <option value="15">15 min</option>
                             <option value="30" selected>30 min</option>
@@ -184,20 +186,20 @@
                 </div>
             </div>
             
-            <div id="modal-agenda" class="card hidden" style="margin-bottom: 24px; border: 1px solid var(--primary-color);">
+            <div id="modal-agenda" class="card hidden" role="region" aria-label="Formulário de Agendamento" style="margin-bottom: 24px; border: 1px solid var(--primary-color);">
                 <h3 style="margin-bottom: 20px;">Adicionar/Editar Agendamento</h3>
                 <input type="hidden" id="agenda-id">
                 <div class="form-grid">
                     <div class="input-group">
-                        <label>Cliente</label>
+                        <label for="agenda-cliente">Cliente</label>
                         <select id="agenda-cliente"></select>
                     </div>
                     <div class="input-group">
-                        <label>Serviço</label>
+                        <label for="agenda-servico">Serviço</label>
                         <select id="agenda-servico"></select>
                     </div>
                     <div class="input-group">
-                        <label>Data/Hora</label>
+                        <label for="agenda-datahora">Data/Hora</label>
                         <input type="datetime-local" id="agenda-datahora">
                     </div>
                     <div class="input-group">
@@ -225,8 +227,8 @@
 
             <div id="agenda-list-view" class="card">
                 <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
-                    <input type="text" id="agenda-search" placeholder="Pesquisar cliente ou serviço..." style="flex: 1; min-width: 200px; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px;">
-                    <select id="agenda-filter-status" style="padding: 10px; border: 1px solid var(--border-color); border-radius: 8px;">
+                    <input type="text" id="agenda-search" placeholder="Pesquisar cliente ou serviço..." aria-label="Pesquisar agendamentos por cliente ou serviço" style="flex: 1; min-width: 200px; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px;">
+                    <select id="agenda-filter-status" aria-label="Filtrar agendamentos por status" style="padding: 10px; border: 1px solid var(--border-color); border-radius: 8px;">
                         <option value="">Todos os Status</option>
                         <option value="PENDENTE">Pendente</option>
                         <option value="CONCLUIDO">Concluído</option>
@@ -256,9 +258,9 @@
             <!-- Calendar View -->
             <div id="agenda-calendar-view" class="card hidden" style="padding: 0;">
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid var(--border-color);">
-                    <button class="btn-secondary" id="btn-prev-week" style="padding: 6px 12px;"><i class="ph ph-caret-left"></i> Anterior</button>
+                    <button class="btn-secondary" id="btn-prev-week" style="padding: 6px 12px;" aria-label="Semana anterior"><i class="ph ph-caret-left" aria-hidden="true"></i> Anterior</button>
                     <h3 id="calendar-week-label" style="font-size: 16px; margin: 0;">Semana Atual</h3>
-                    <button class="btn-secondary" id="btn-next-week" style="padding: 6px 12px;">Próxima <i class="ph ph-caret-right"></i></button>
+                    <button class="btn-secondary" id="btn-next-week" style="padding: 6px 12px;" aria-label="Próxima semana">Próxima <i class="ph ph-caret-right" aria-hidden="true"></i></button>
                 </div>
                 <div class="calendar-container" style="overflow-x: auto; padding: 20px;">
                     <div id="calendar-grid" class="calendar-grid">
@@ -273,12 +275,12 @@
             <header class="section-header">
                 <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; flex: 1;">
                     <h2>Meus Clientes</h2>
-                    <input type="text" id="clientes-search" placeholder="Pesquisar por Nome, CPF ou Telefone..." style="max-width: 300px; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; flex: 1;">
+                    <input type="text" id="clientes-search" placeholder="Pesquisar por Nome, CPF ou Telefone..." aria-label="Pesquisar clientes por nome, CPF ou telefone" style="max-width: 300px; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; flex: 1;">
                 </div>
-                <button class="btn-primary" id="btn-add-cliente"><i class="ph ph-plus"></i> Novo Cliente</button>
+                <button class="btn-primary" id="btn-add-cliente"><i class="ph ph-plus" aria-hidden="true"></i> Novo Cliente</button>
             </header>
 
-            <div id="modal-cliente" class="card hidden" style="margin-bottom: 24px; border: 1px solid var(--primary-color);">
+            <div id="modal-cliente" class="card hidden" role="region" aria-label="Formulário de Cadastro de Cliente" style="margin-bottom: 24px; border: 1px solid var(--primary-color);">
                 <h3 style="margin-bottom: 20px;">Cadastrar Cliente</h3>
                 <div class="form-grid">
                     <div class="input-group full-width">
@@ -334,19 +336,19 @@
         <section id="view-servicos" class="view-section">
             <header class="section-header">
                 <h2>Serviços Oferecidos</h2>
-                <button class="btn-primary" id="btn-add-servico"><i class="ph ph-plus"></i> Novo Serviço</button>
+                <button class="btn-primary" id="btn-add-servico"><i class="ph ph-plus" aria-hidden="true"></i> Novo Serviço</button>
             </header>
 
-            <div id="modal-servico" class="card hidden" style="margin-bottom: 24px; border: 1px solid var(--primary-color);">
+            <div id="modal-servico" class="card hidden" role="region" aria-label="Formulário de Serviço" style="margin-bottom: 24px; border: 1px solid var(--primary-color);">
                 <h3 style="margin-bottom: 20px;">Cadastrar/Editar Serviço</h3>
                 <input type="hidden" id="servico-id">
                 <div class="form-grid">
                     <div class="input-group">
-                        <label>Nome do Serviço</label>
+                        <label for="servico-nome">Nome do Serviço</label>
                         <input type="text" id="servico-nome">
                     </div>
                     <div class="input-group">
-                        <label>Valor (R$)</label>
+                        <label for="servico-valor">Valor (R$)</label>
                         <input type="number" step="0.01" id="servico-valor">
                     </div>
                 </div>
@@ -378,30 +380,30 @@
         <section id="view-recompensas" class="view-section">
             <header class="section-header">
                 <h2>Recompensas & Benefícios</h2>
-                <button class="btn-primary" id="btn-add-recompensa"><i class="ph ph-plus"></i> Nova Recompensa</button>
+                <button class="btn-primary" id="btn-add-recompensa"><i class="ph ph-plus" aria-hidden="true"></i> Nova Recompensa</button>
             </header>
 
-            <div id="modal-recompensa" class="card hidden" style="margin-bottom: 24px; border: 1px solid var(--primary-color);">
+            <div id="modal-recompensa" class="card hidden" role="region" aria-label="Formulário de Recompensa" style="margin-bottom: 24px; border: 1px solid var(--primary-color);">
                 <h3 style="margin-bottom: 20px;">Cadastrar/Editar Recompensa</h3>
                 <input type="hidden" id="recompensa-id">
                 <div class="form-grid">
                     <div class="input-group">
-                        <label>Nome da Recompensa</label>
+                        <label for="recompensa-nome">Nome da Recompensa</label>
                         <input type="text" id="recompensa-nome" placeholder="Ex: Desconto na Limpeza">
                     </div>
                     <div class="input-group">
-                        <label>Tipo</label>
+                        <label for="recompensa-tipo">Tipo</label>
                         <select id="recompensa-tipo">
                             <option value="desconto">Desconto (%)</option>
                             <option value="bonus">Bônus Fixo (R$)</option>
                         </select>
                     </div>
                     <div class="input-group">
-                        <label>Valor (% ou R$)</label>
+                        <label for="recompensa-valor">Valor (% ou R$)</label>
                         <input type="number" step="0.01" id="recompensa-valor" placeholder="10">
                     </div>
                     <div class="input-group">
-                        <label>Nível Mínimo</label>
+                        <label for="recompensa-nivel">Nível Mínimo</label>
                         <select id="recompensa-nivel">
                             <option value="">Todos (Sem restrição)</option>
                             <option value="prata">Apenas Prata e superior</option>
@@ -418,11 +420,11 @@
                         <label for="recompensa-aniversario" style="margin: 0; font-weight: bold; color: var(--primary-color); font-size: 14px; cursor: pointer;">🎂 É Recompensa de Aniversário (Aparece apenas no mês do cliente)</label>
                     </div>
                     <div class="input-group">
-                        <label>Custo em Pontos</label>
+                        <label for="recompensa-custo">Custo em Pontos</label>
                         <input type="number" id="recompensa-custo" placeholder="50">
                     </div>
                     <div class="input-group full-width">
-                        <label>Descrição</label>
+                        <label for="recompensa-desc">Descrição</label>
                         <input type="text" id="recompensa-desc" placeholder="Ex: Em qualquer procedimento">
                     </div>
                 </div>
@@ -446,9 +448,9 @@
             </header>
 
             <div class="card" style="margin-bottom: 24px;">
-                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Selecione o Cliente</label>
+                <label for="simulador-client-select" style="display: block; margin-bottom: 8px; font-weight: 500;">Selecione o Cliente</label>
                 <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-                    <input type="text" id="simulador-search" placeholder="Filtrar por CPF ou Nome..." style="max-width: 300px; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; flex: 1;">
+                    <input type="text" id="simulador-search" placeholder="Filtrar por CPF ou Nome..." aria-label="Filtrar clientes por CPF ou nome" style="max-width: 300px; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; flex: 1;">
                     <select id="simulador-client-select" style="max-width: 400px; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color); color: var(--text-primary); flex: 2;">
                         <option value="">Selecione um cliente...</option>
                     </select>
@@ -467,7 +469,7 @@
                             <span id="simulador-progress-label-next">Próximo nível</span>
                         </div>
                         <div class="progress-bar-track">
-                            <div class="progress-bar-fill" id="simulador-progress-fill" style="width: 0%;" role="progressbar"></div>
+                            <div class="progress-bar-fill" id="simulador-progress-fill" style="width: 0%;" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
                 </div>
